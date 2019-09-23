@@ -8,18 +8,42 @@ const lyricChangeReducer = (state = initialState.songsById, action) => {
   case types.NEXT_LYRIC:
     const newArrayPosition = state[action.currentSongId].arrayPosition + 1;
     newSongsByIdEntry = Object.assign({}, state[action.currentSongId], {
-      arrayPosition: newArrayPosition
+      arrayPosition: newArrayPosition,
     });
     newSongsByIdStateSlice = Object.assign({}, state, {
-      [action.currentSongId]: newSongsByIdEntry
+      [action.currentSongId]: newSongsByIdEntry,
     });
     return newSongsByIdStateSlice;
   case types.RESTART_SONG:
     newSongsByIdEntry = Object.assign({}, state[action.currentSongId], {
-      arrayPosition: 0
+      arrayPosition: 0,
     });
     newSongsByIdStateSlice = Object.assign({}, state, {
-      [action.currentSongId]: newSongsByIdEntry
+      [action.currentSongId]: newSongsByIdEntry,
+    });
+    return newSongsByIdStateSlice;
+  case types.REQUEST_SONG:
+    newSongsByIdEntry = {
+      isFetching: true,
+      title: action.title,
+      songId: action.songId,
+    };
+    newSongsByIdStateSlice = Object.assign({}, state, {
+      [action.songId]: newSongsByIdEntry,
+    });
+    return newSongsByIdStateSlice;
+  case types.RECIEVE_SONG:
+    newSongsByIdEntry = Object.assign({}, state[action.songId], {
+      isFetching: false,
+      receivedAt: action.receivedAt,
+      title: action.title,
+      artist: action.artist,
+      songArray: action.songArray,
+      arrayPosition: 0,
+      songId: action.songId,
+    });
+    newSongsByIdStateSlice = Object.assign({}, state, {
+      [action.songId]: newSongsByIdEntry,
     });
     return newSongsByIdStateSlice;
   default:

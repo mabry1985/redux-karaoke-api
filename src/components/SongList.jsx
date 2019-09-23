@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { restartSong, changeSong } from '../actions/index.js';
 
 const SongList = ({ dispatch, songList }) => {
   let action;
@@ -10,19 +11,13 @@ const SongList = ({ dispatch, songList }) => {
       {Object.keys(songList).map(songId => {
         let song = songList[songId];
         return <li key = {songId} onClick = {() => {
-          if (song.arrayPosition > 0){
-            action = {
-              type: 'RESTART_SONG',
-              currentSongId: songId
-            };
-            dispatch(action);
+          if (song.arrayPosition > 0) {
+            dispatch(restartSong(songId));
           }
-          action = {
-            type: 'CHANGE_SONG',
-            newSelectedSongId: songId
-          };
-          dispatch(action);
+
+          dispatch(changeSong(songId));
         }}>
+
           {song.title} by {song.artist}</li>;
       })}
     </div>
@@ -31,13 +26,9 @@ const SongList = ({ dispatch, songList }) => {
 
 SongList.propTypes = {
   songList: PropTypes.object,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
 };
 
-const mapStateToProps = state => {
-  return {
-    songList: state.songsById
-  };
-};
+const mapStateToProps = state => ({ songList: state.songsById });
 
 export default connect(mapStateToProps)(SongList);
